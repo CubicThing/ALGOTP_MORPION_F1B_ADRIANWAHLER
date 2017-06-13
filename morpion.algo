@@ -1,0 +1,149 @@
+﻿PROGRAMME morpion
+
+
+procedure affichergrille(grille : tableau de caractere)
+
+VAR
+
+i,j ; entiers
+
+DEBUT
+
+ECRIRE(grille[1,1] & '|' & grille[2,1] & '|' & grille[3,1])
+ECRIRE('-----')
+ECRIRE(grille[1,2] & '|' & grille[2,2] & '|' & grille[3,2])
+ECRIRE('-----')
+ECRIRE(grille[1,3] & '|' & grille[2,3] & '|' & grille[3,3])
+
+FIN
+
+procedure tour(grille : tableau de caractere; joueur : caractere)
+VAR
+
+x,y : entier
+valide : booleen
+
+DEBUT
+valdie <- faux
+
+repeter
+    ECRIRE(Entrez la ligne sur laquelle vous voulez mettre votre signe.)
+    LIRE(x)
+    ECRIRE(Entrez la colonne dnas laquelle vous vvoulez mettre votre signe.)
+    LIRE(y)
+    
+    SI grille[x,y] = ' ' ALORS
+        grille[x,y] <- joueur
+        valide <- vrai
+    SINON
+        ECRIRE(Ce spot est déjà occupé)
+    
+jusqu'a valide <- vrai
+        
+FIN
+
+procedure changerjoueur(var joueur : caractere)
+DEBUT
+    SI joueur -= 'x' ALORS joueur = 'o' SINON joueur = 'x'
+FIN
+
+fonction checkhor(grille : tableau de caractere) : booleen
+DEBUT
+   
+   SI (grille [1,1]) = grille[2,1] ET (grille[2,1] = grille[2,3]) ALORS checkhor <- vrai
+   SINON SI (grille [1,2]) = grille[2,2] ET (grille[2,2] = grille[3,2]) ALORS checkhor <- vrai
+   SINON SI (grille [1,3]) = grille[2,3] ET (grille[2,3] = grille[3,3]) ALORS checkhor <- vrai
+   SINON checkhor <- faux
+    
+FIN
+
+fonction checver(grille : tableau de caractere) : booleen
+DEBUT
+   
+   SI (grille [1,1]) = grille[1,2] ET (grille[1,2] = grille[1,3]) ALORS checkhor <- vrai
+   SINON SI (grille [2,1]) = grille[2,2] ET (grille[2,2] = grille[2,3]) ALORS checkhor <- vrai
+   SINON SI (grille [3;1]) = grille[3,2] ET (grille[3,2] = grille[3,3]) ALORS checkhor <- vrai
+   SINON checkhor <- faux
+    
+FIN
+
+fonction checkdiag(grille : tableau de caractere) : booleen
+DEBUT
+   
+   SI (grille [1,1]) = grille[2,2] ET (grille[2,2] = grille[3,3]) ALORS checkhor <- vrai
+   SINON SI (grille [1,3]) = grille[2,2] ET (grille[2,2] = grille[3,2]) ALORS checkhor <- vrai
+   SINON checkhor <- faux
+    
+FIN
+
+
+
+//-----------------------------------------MAIN -------------------------------
+
+
+
+VAR
+
+joueur : caractere
+grille : tableau de 3x3 de cracteres
+manches,i,j : entier
+pto,ptx,nbtour  : entier
+nomx,nomy : chaines
+TmpDebut,TmpFin : date
+ft : fichier texte
+
+DEBUT
+
+assigner(ft,morpion.txt)
+ajouter(f)
+
+ECRIRE(ENtrez le nom du joueur x)
+LIRE(nomx)
+
+ECRIRE(Entrez le nom du joueur y)
+LIRE(nomy)
+
+joueur = 'x';
+
+TmpDebut <- maintenant() //Fontion donnant la date et l'heure actuelle.)
+
+ECRIRE(f,' La partie entre le joueur ' & nomx & ' et ' & nomy & ' a commence a : ' & DateToChaine(MIANTENANT())
+
+
+ECRIRE(Combien de manche faudrat-il gagner?)
+repeter LIRE(manches) jusqu'a manches > 0
+
+
+
+repeter
+    pour i de 1 a 3
+        pour j de 1 a 3
+            grille[i,j] := ' ';
+        finpour
+    finpour
+    nbtour <- 0;
+    
+    repeter
+	affichergrille(grille)
+        tour(grille,joueur)
+        nbtour <- nbtour +1
+        changerjoueur(joueur)
+    jusqu'a tour = 9 OU checkhor(grille) = vrai ou checkver(grille) = vrai ou checkdiag(grille) = vrai
+
+    si manche <> 9 ALORS
+    	SI joueur = 'x' ALORS
+	 	pto := pto + 1
+		ECRIRE('Le joueur' & nomx & 'a gagne le round.')
+		ECRIRE(ft & nomx & ' a gagné la manche en ' & EntierEnCHaine((nbtour div 2) + 1) & 'coups.') 
+	FINSI
+	SINON
+		ptx := ptx + 1
+		ECRIRE('Le joueur' & nomy & 'a gagne le round.')
+		ECRIRE(ft & nomy & ' a gagné la manche en ' & EntierEnCHaine((nbtour div 2) + 1) & 'coups.') 
+	FINSINON
+	jusqu'a pto = manches OU ptx = manches
+    FINSI
+TmpFin <- MAINENANT();
+
+
+FIN.
